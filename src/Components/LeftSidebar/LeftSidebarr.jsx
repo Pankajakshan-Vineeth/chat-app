@@ -15,6 +15,11 @@ const LeftSidebarr = () => {
       <img src={logo} className='logo' alt="" />
       <div className="menu">
           <img src={menu_icon} alt="" />
+          <div className="sub-menu">
+            <p>Edit profile</p>
+            <hr/>
+            <p>Logout</p>
+          </div>
       </div>
   </div>
 
