@@ -3,6 +3,7 @@ import './ProfileUpdate.css'
 import avatar_icon from '../../assets/avatar_icon.png'
 import logo_icon from '../../assets/logo_icon.png'
 
+
 const ProfileUpdate = () => {
 
   const [image, setImage] = useState(false)
