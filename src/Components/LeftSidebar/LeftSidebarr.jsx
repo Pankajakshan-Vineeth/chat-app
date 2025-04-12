@@ -32,6 +32,7 @@ const LeftSidebarr = () => {
 
 <div className="ls-list">
   {Array(12).fill('').map((item, index) => (
+
     <div key={index} className="friends">
       <img src={profile_img} alt="" />
       <div className='friends-para'>
@@ -39,6 +40,7 @@ const LeftSidebarr = () => {
       <span>Hello, How are you?</span>
       </div>
     </div>
+    
   ))}
 </div>
 </div>
