@@ -15,6 +15,8 @@ const App = () => {
   useEffect(()=>{
   onAuthStateChanged(auth,async(user)=>{
    if(user){
+    navigate('/Chat')
+    console.log(user)
 
    }else{
     navigate('/')
