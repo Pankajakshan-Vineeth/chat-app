@@ -12,17 +12,20 @@ const [email, setEmail] = useState('')
 const [password, setPassword] = useState('')
 
 const onSubmitHandler =(event)=> {
-
+  event.preventDefault();
+  if (currState==='Sign Up'){
+    signup(userName,email,password);
+  }
 }
 
   return (
     <div className='login'>
         <img src={logo_big} alt="" className='logo'/>
 
-        <form onChange = {onSubmitHandler} className="login-form">
-          <h2>{currState}</h2>
+        <form onSubmit={onSubmitHandler} className="login-form">
+        <h2>{currState}</h2>
           {currState === 'Sign Up'? <input onChange ={(e)=>setUserName(e.target.value)} value = {userName} type="text" placeholder ='username' className="form-input" />:null }
-          <input onChange={(e)=>setEmail(e.target.value)} value = {email} type="emailaddress" placeholder ='emailaddress' className="form-input" />
+          <input onChange={(e)=>setEmail(e.target.value)} value = {email} type="email" placeholder ='Emailaddress' className="form-input" />
           <input onChange={(e)=>setPassword(e.target.value)} value = {password}type="password" placeholder ='Password' className="form-input" />
           {currState === 'Sign Up' ? <button type = 'submit'>Create Account</button> : <button>Login</button> }
 

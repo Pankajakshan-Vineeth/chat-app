@@ -1,49 +1,49 @@
 import { initializeApp } from "firebase/app";
-import {createUserWithEmailAndPassword, getAuth} from 'firebase/auth'
-import {getFirestore, setDoc} from 'firebase/firestore'
-import { toast } from "react-toastify";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, setDoc, doc, Timestamp } from "firebase/firestore";
+import { toast } from "react-toastify"; 
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA6GVU0m8Rz2Hr7iBwXOdB2DtZQ4D3Evg0",
-  authDomain: "chat-app-11324.firebaseapp.com",
-  projectId: "chat-app-11324",
-  storageBucket: "chat-app-11324.firebasestorage.app",
-  messagingSenderId: "84657768793",
-  appId: "1:84657768793:web:aaddd3f5d6e2ee481e6448"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyBXqShVZi1Ky5A0Px1hDsp-rX1LNYCU-Fs",
+    authDomain: "chat-app-2e791.firebaseapp.com",
+    projectId: "chat-app-2e791",
+    storageBucket: "chat-app-2e791.firebasestorage.app",
+    messagingSenderId: "259567802675",
+    appId: "1:259567802675:web:cd07cbd326c71354370646"
+  };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app)
-const db = getFirestore(app)
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app)
+  const db = getFirestore(app)
 
-//creating new account
+  //creating new account
 
-const signup = async( username, email, password) =>{
-  try{
-    const res = await createUserWithEmailAndPassword(auth,email,password)
-    const user = res.user;
-   
-//Creating user data in usercollection
+  const signup = async( username, email, password) =>{
+    try{
+      const res = await createUserWithEmailAndPassword(auth,email,password)
+      const user = res.user;
+    
+  //Creating user data in usercollection
 
-    await setDoc(doc(db,'users', user.uid),{
-        id:user.uid,
-        username:username.toLowerCase(),
-        email,
-        name:'',
-        avatar:'',
-        bio:'hey there iam using chat app',
-        lastSeen:Date.now()
-    })
+      await setDoc(doc(db,'users', user.uid),{
+          id:user.uid,
+          username:username.toLowerCase(),
+          email,
+          name:'',
+          avatar:'',
+          bio:'hey there iam using chat app',
+          lastSeen:Date.now()
+      })
 
-    //one more data in new collection
+      //one more data in new collection
 
-    await setDoc(doc(db,'chats', user.uid),{
-        chatData:[],
-    })
-  }catch(error){
-    console.error(error)
-    toast.error(error.code)
+      await setDoc(doc(db,'chats', user.uid),{
+          chatData:[],
+      })
+    }catch(error){
+      console.error(error)
+      toast.error(error.code)
+    }
   }
-}
 
-export {signup}
+  export {signup}
