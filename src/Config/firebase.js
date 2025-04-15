@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { getFirestore, setDoc, doc, Timestamp } from "firebase/firestore";
 import { toast } from "react-toastify"; 
 
@@ -42,8 +42,32 @@ import { toast } from "react-toastify";
       })
     }catch(error){
       console.error(error)
-      toast.error(error.code)
+      toast.error(error.code.split('/')[1].split('-').join(' '));
     }
   }
 
-  export {signup}
+  //Login function
+
+  const login = async(email, password)=>{
+    try{
+      await signInWithEmailAndPassword(auth,email,password)
+    }catch(error){
+      console.error(error)
+      toast.error(error.code.split('/')[1].split('-').join(' '));
+    }
+
+  }
+
+  // Logout //exported from forebase
+
+  const logout = async()=>{
+    try {
+      await signOut(auth)
+    }catch(error){
+      console.error(error)
+      toast.error(error.code.split('/')[1].split('-').join(' '));
+    
+    }
+  }
+
+  export {signup,login,logout,auth,db}

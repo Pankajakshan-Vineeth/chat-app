@@ -6,7 +6,7 @@ import pic1 from '../../assets/pic1.png'
 import pic2 from '../../assets/pic2.png'
 import pic3 from '../../assets/pic3.png'
 import pic4 from '../../assets/pic4.png'
-
+import { logout } from '../../Config/firebase'
 
 
 const RightSidebar = () => {
@@ -33,7 +33,7 @@ const RightSidebar = () => {
           <img src={pic2} alt="" />
         </div>
       </div>
-     <button>Logout</button>
+     <button onClick ={()=>logout()}>Logout</button>
     </div>
   )
 }
