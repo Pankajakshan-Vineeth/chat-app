@@ -11,6 +11,8 @@ const AppContextProvider = (props)=>{
     const [userData,setUserData] = useState(null);
     const [chatData,setChatData] = useState(null);
 
+    //userdata function
+
     const loadUserData = async (uid) =>{
         try{
          const userRef = doc(db,'users',uid)
@@ -28,12 +30,14 @@ const AppContextProvider = (props)=>{
         }
         
         // Assuming userRef is a valid DocumentReference from Firestore
+
         await updateDoc(userRef, {
             lastSeen: Date.now()
         });
         
 
-                      //set interval every one min
+         //set interval every one min
+
          ssetInterval(async () => {
             if (auth.chatUser) {
                 await updateDoc(userRef, {
@@ -46,6 +50,7 @@ const AppContextProvider = (props)=>{
 
         }
     }
+
 
     const value = {
         userData,setUserData,
