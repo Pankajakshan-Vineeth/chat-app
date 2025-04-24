@@ -13,9 +13,10 @@ const ProfileUpdate = () => {
 
   const [image, setImage] = useState(false)
   const [name,setName] = useState('');
-  const [bio,setbio] = useState('');
+  const [bio,setBio] = useState('');
   const [uid,setUid] = useState('');
   const [prevImage, setPrevImage] = useState('');
+
    
   useEffect(() => {
 
