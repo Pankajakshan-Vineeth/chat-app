@@ -38,7 +38,7 @@ import { toast } from "react-toastify";
       //one more data in new collection
 
       await setDoc(doc(db,'chats', user.uid),{
-          chatData:[],
+          chatsData:[],
       })
     }catch(error){
       console.error(error)

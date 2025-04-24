@@ -5,10 +5,23 @@ import menu_icon from '../../assets/menu_icon.png'
 import search_icon from '../../assets/search_icon.png'
 import profile_img from '../../assets/profile_richard.png'
 import { useNavigate } from 'react-router-dom'
+import { collection, getDoc, getDocs, where } from 'firebase/firestore'
 
 const LeftSidebarr = () => {
 
   const navigate = useNavigate();
+  
+  const inputHandler = async(e)=>{
+   try {
+    const input = e.target.value;
+    const userRef = collection(db,'users');
+    const q = query(userRef, where('username','==',input.toLowerCase()));
+    const querySnap = await getDocs(q);
+   } catch (error) {
+    
+   }
+  }
+
   return (
     <div>
        <div className='ls'>
@@ -28,7 +41,7 @@ const LeftSidebarr = () => {
 
   <div className="ls-search">
       <img src={search_icon} alt="" />
-      <input type="text" placeholder="search here" />
+      <input onChange = {inputHandler} type="text" placeholder="search here" />
   </div>
 
 </div>
