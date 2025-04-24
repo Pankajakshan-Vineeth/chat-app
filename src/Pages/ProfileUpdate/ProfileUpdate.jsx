@@ -8,12 +8,12 @@ import { auth, db } from "../../Config/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import upload from "../../Libraries/Upload";
-import { AppContext } from '../../Context/AppContext'; // Make sure AppContext is exported like this
+import { AppContext } from '../../Context/AppContext'; 
 
 const ProfileUpdate = () => {
   const navigate = useNavigate();
 
-  const [image, setImage] = useState(false);
+  const [image, setImage] = useState(null);
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [uid, setUid] = useState("");

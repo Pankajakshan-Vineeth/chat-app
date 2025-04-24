@@ -4,11 +4,12 @@ import { db } from "../Config/firebase";
 import { useNavigate } from "react-router-dom";
 
 export const AppContext = createContext();
-const navigate = useNavigate();
 
 
 const AppContextProvider = (props)=>{
+    const navigate = useNavigate();
 
+  
     const [userData,setUserData] = useState(null);
     const [chatData,setChatData] = useState(null);
 
