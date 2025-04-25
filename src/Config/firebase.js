@@ -29,7 +29,7 @@ import { toast } from "react-toastify";
           id:user.uid,
           username:username.toLowerCase(),
           email,
-          name:'',
+          name:username,
           avatar:'',
           bio:'hey there iam using chat app',
           lastSeen:Date.now()

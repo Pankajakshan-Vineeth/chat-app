@@ -11,7 +11,7 @@ import { db } from "../../Config/firebase";
 
 const LeftSidebarr = () => {
   const navigate = useNavigate();
-  const { userData, chatsData } = useContext(AppContext);
+  const { userData, chatsData , chatUser, setChatUser, setMessagesId, messagesId} = useContext(AppContext);
   const [userProfiles, setUserProfiles] = useState([]);
   const [filteredProfiles, setFilteredProfiles] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -105,7 +105,8 @@ const LeftSidebarr = () => {
   }
 
   const setChat = async(user) => {
-    console.log(user)
+    setMessagesId(user.messageId);
+    setChatUser(user)
   }
 
   return (
