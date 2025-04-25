@@ -5,9 +5,9 @@ import menu_icon from "../../assets/menu_icon.png";
 import search_icon from "../../assets/search_icon.png";
 import profile_img from "../../assets/profile_richard.png";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs, doc, setDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { AppContext } from "../../Context/AppContext";
-import { auth, db } from "../../Config/firebase";
+import { db } from "../../Config/firebase";
 
 const LeftSidebarr = () => {
   const navigate = useNavigate();
@@ -24,18 +24,19 @@ const LeftSidebarr = () => {
         const querySnapshot = await getDocs(userRef);
         const users = querySnapshot.docs.map((doc) => doc.data());
 
-        // Remove the current user from the list
-        const filteredUsers = users.filter(user => user.id !== userData.id);
-        
+        // Remove the current user from the list (if userData is available)
+        const filteredUsers = users.filter(user => user.id !== userData.id && user.name !== "Enrique Murphy");
         setUserProfiles(filteredUsers);
-        setFilteredProfiles(filteredUsers); // Initially, show all profiles except the current user
+        setFilteredProfiles(filteredUsers); // Initially, show all profiles except the current user and Enrique Murphy
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
 
-    fetchUsers();
-  }, [userData.id]);
+    if (userData) {
+      fetchUsers();
+    }
+  }, [userData]); // Run this effect whenever userData changes
 
   // Handle search input change
   const handleSearch = (e) => {
@@ -99,6 +100,14 @@ const LeftSidebarr = () => {
     }
   };
 
+  if (!userData) {
+    return <div>Loading...</div>;
+  }
+
+  const setChat = async(user) => {
+    console.log(user)
+  }
+
   return (
     <div className="ls">
       <div className="ls-top">
@@ -130,10 +139,9 @@ const LeftSidebarr = () => {
           const userExist = chatsData?.some((chat) => chat.rId === user.id);
           return (
             <div
+              onClick = {()=>setChat(user)}
               key={index}
-              className="friends"
-              onClick={() => addChat(user, userData)}
-            >
+              className="friends"            >
               <img src={user.avatar || profile_img} alt="user" />
               <div className="friends-para">
                 <p>{user.name || "Unknown"}</p>
