@@ -9,13 +9,14 @@ import logo_icon from "../../assets/logo_icon.png";
 import pic1 from "../../assets/pic1.png";
 import { AppContext } from "../../Context/AppContext";
 import { arrayUnion, updateDoc } from "firebase/firestore";
+import { doc, db, getDoc, onSnapshot } from "firebase/firestore";
+import { toast } from "react-toastify"; 
 
 const ChatBox = () => {
   const { userData, messagesId, chatUser, messages, setMessages } =
     useContext(AppContext);
 
   console.log("chatUser", chatUser);
-  console.log("chatUser.userData", chatUser?.userData);
 
   //state variable to store the data of the message input field
 
@@ -33,6 +34,8 @@ const ChatBox = () => {
             createdAt: new Date(),
           }),
         });
+        setInput(""); // Clear the input
+
         const userIDs = [chatUser.rId, userData.id];
 
         userIDs.forEach(async (id) => {
@@ -41,7 +44,7 @@ const ChatBox = () => {
 
           if (userChatsSnapshot.exists()) {
             const userChatData = userChatsSnapshot.data();
-            const chatIndex = userChatData.chatsData.findindex(
+            const chatIndex = userChatData.chatsData.findIndex(
               (c) => c.messageId === messagesId
             );
             userChatData.chatsData[chatIndex].lastMessage = input.slice(0, 30);
@@ -61,6 +64,7 @@ const ChatBox = () => {
   };
 
   useEffect(() => {
+
     if (messagesId) {
       const unSub = onSnapshot(doc(db, "messages", messagesId), (res) => {
         setMessages(res.data().messages.reverse());
@@ -127,8 +131,8 @@ const ChatBox = () => {
         <label htmlFor="image">
           <img src={gallery_icon} alt="" />
         </label>
-        <img onClick = {sendMessage} src={send_button} alt="" />
-      </div>
+        <img onClick={sendMessage} src={send_button} alt="" />
+        </div>
     </div>
   ) : (
     <div className="chat-welcome">
