@@ -2,6 +2,9 @@ import { createContext, useEffect, useState } from "react";
 import {  doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../Config/firebase";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../Config/firebase";
+
+
 
 export const AppContext = createContext();
 
