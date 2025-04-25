@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./ChatBox.css";
 import profile_img from "../../assets/profile_richard.png";
 import green_dot from "../../assets/green_dot.png";
 import help_icon from "../../assets/help_icon.png";
 import gallery_icon from "../../assets/gallery_icon.png";
 import send_button from "../../assets/send_button.png";
-import logo_icon from '../../assets/logo_icon.png';
+import logo_icon from "../../assets/logo_icon.png";
 import pic1 from "../../assets/pic1.png";
 import { AppContext } from "../../Context/AppContext";
 
@@ -13,17 +13,34 @@ const ChatBox = () => {
   const { userData, messagesId, chatUser, messages, setMessages } =
     useContext(AppContext);
 
-    //state variable to store the data of the message input field
+  console.log("chatUser", chatUser);
+  console.log("chatUser.userData", chatUser?.userData);
 
-    const [input, setInput] = useState('')
+  //state variable to store the data of the message input field
+
+  const [input, setInput] = useState("");
+
+  useEffect(()=>{
+     if (messagesId) {
+      const unSub = onSnapshot(doc(db,'messages',messagesId),(res)=>{
+        setMessages(res.data().messages.reverse())
+        console.log(res.data().messages.reverse());
+        })
+        return()=>{
+          unSub();
+        }
+     }
+  },[messagesId])
 
   return chatUser ? (
     <div className="chat-box">
       <div className="chat-user">
-        <img src={chatUser?.userData ?.avatar || profile_img} alt="" />
+        <img src={chatUser?.avatar || profile_img} alt="" />
         <p>
-          {chatUser?.userData?.name || chatUser?.userData?.username || 'unknown'} <img className="dot" src={green_dot} alt="" />
+          {chatUser?.name || chatUser?.username || chatUser?.email || "unknown"}
+          <img className="dot" src={green_dot} alt="" />
         </p>
+
         <img src={help_icon} alt="" />
       </div>
 
@@ -66,11 +83,12 @@ const ChatBox = () => {
         <img src={send_button} alt="" />
       </div>
     </div>
-  )
-  :<div className="chat-welcome">
-    <img src= {logo_icon} alt="" />
-    <p>Chat anytime, anywhere</p>
-  </div>
+  ) : (
+    <div className="chat-welcome">
+      <img src={logo_icon} alt="" />
+      <p>Chat anytime, anywhere</p>
+    </div>
+  );
 };
 
 export default ChatBox;
