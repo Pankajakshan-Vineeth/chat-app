@@ -8,7 +8,7 @@ import send_button from "../../assets/send_button.png";
 import logo_icon from "../../assets/logo_icon.png";
 import pic1 from "../../assets/pic1.png";
 import { AppContext } from "../../Context/AppContext";
-import { arrayUnion, updateDoc } from "firebase/firestore";
+import { arrayUnion, setDoc, updateDoc } from "firebase/firestore";
 import { doc,getDoc, onSnapshot } from "firebase/firestore";
 import { toast } from "react-toastify"; 
 import { db } from "../../Config/firebase";
@@ -39,6 +39,7 @@ const ChatBox = () => {
       const docSnap = await getDoc(messageDocRef);
   
       // If document doesn't exist, create a new one
+
       if (!docSnap.exists()) {
         console.log("Document does not exist. Creating new message document.");
         await setDoc(messageDocRef, { messages: [] });
@@ -65,7 +66,7 @@ const ChatBox = () => {
       setInput("");
   
       // Update the chat data for both users
-      const userIDs = [chatUser.rId, userData.id];
+      const userIDs = [chatUser.id, userData.id];
       for (let id of userIDs) {
         const userChatsRef = doc(db, "chats", id);
         const userChatsSnapshot = await getDoc(userChatsRef);

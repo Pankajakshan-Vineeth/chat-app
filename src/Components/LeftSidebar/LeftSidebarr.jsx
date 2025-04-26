@@ -5,7 +5,7 @@ import menu_icon from "../../assets/menu_icon.png";
 import search_icon from "../../assets/search_icon.png";
 import profile_img from "../../assets/profile_richard.png";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, query, setDoc, where } from "firebase/firestore";
 import { AppContext } from "../../Context/AppContext";
 import { db } from "../../Config/firebase";
 
@@ -105,7 +105,7 @@ const LeftSidebarr = () => {
   }
 
   const setChat = async(user) => {
-    setMessagesId(user.messageId);
+    setMessagesId(user.id);
     setChatUser(user)
   }
 
