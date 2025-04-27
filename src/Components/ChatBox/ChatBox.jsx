@@ -8,11 +8,10 @@ import send_button from "../../assets/send_button.png";
 import logo_icon from "../../assets/logo_icon.png";
 import pic1 from "../../assets/pic1.png";
 import { AppContext } from "../../Context/AppContext";
-import { arrayUnion, setDoc, updateDoc } from "firebase/firestore";
-import { doc,getDoc, onSnapshot } from "firebase/firestore";
-import { toast } from "react-toastify"; 
+import { arrayUnion, getDocs, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { toast } from "react-toastify";
 import { db } from "../../Config/firebase";
-
 
 const ChatBox = () => {
   const { userData, messagesId, chatUser, messages, setMessages } =
@@ -28,74 +27,46 @@ const ChatBox = () => {
 
   const sendMessage = async () => {
     try {
-      // Ensure that input and messagesId are valid
-      if (!input || !messagesId) {
-        console.log('Missing input or messagesId', { input, messagesId });
-        toast.error('Message or message ID is missing.');
-        return;
-      }
-  
-      const messageDocRef = doc(db, "messages", messagesId);
-      const docSnap = await getDoc(messageDocRef);
-  
-      // If document doesn't exist, create a new one
+      if (input && messagesId) {
+        await updateDoc(doc(db, "messages", messagesId), {
+          messages: arrayUnion({
+            sId: userData.id,
+            text: input,
+            createdAt: new Date(),
+          }),
+        });
 
-      if (!docSnap.exists()) {
-        console.log("Document does not exist. Creating new message document.");
-        await setDoc(messageDocRef, { messages: [] });
-      }
-  
-      console.log('Adding message:', {
-        sId: userData.id,
-        text: input,
-        createdAt: new Date(),
-      });
-  
-      // Add the message to the messages array
-      await updateDoc(messageDocRef, {
-        messages: arrayUnion({
-          sId: userData.id,
-          text: input,
-          createdAt: new Date(),
-        }),
-      });
-  
-      console.log("Message added successfully.");
-  
-      // Clear the input field after sending
-      setInput("");
-  
-      // Update the chat data for both users
-      const userIDs = [chatUser.id, userData.id];
-      for (let id of userIDs) {
-        const userChatsRef = doc(db, "chats", id);
-        const userChatsSnapshot = await getDoc(userChatsRef);
-  
-        if (userChatsSnapshot.exists()) {
-          const userChatData = userChatsSnapshot.data();
-          const chatIndex = userChatData.chatsData.findIndex(
-            (c) => c.messageId === messagesId
-          );
-          userChatData.chatsData[chatIndex].lastMessage = input.slice(0, 30);
-          userChatData.chatsData[chatIndex].updatedAt = Date.now();
-          if (userChatData.chatsData[chatIndex].rId === userData.id) {
-            userChatData.chatsData[chatIndex].messageSeen = false;
+        const userIDs = [chatUser.rId, userData.id];
+
+        userIDs.forEach(async (id) => {
+          const userChatsRef = doc(db, "chats", id);
+          const userChatsSnapShot = await getDoc(userChatsRef);
+
+          if (userChatsSnapShot.exists()) {
+            const userChatData = userChatsSnapShot.data();
+            const chatIndex = userChatData.chatsData.findIndex(
+              (c) => c.messageId === messagesId
+            );
+            userChatData.chatsData[chatIndex].lastMessage = input.slice(0, 30);
+            userChatData.chatsData[chatIndex].updatedAt = Date.now();
+
+            if (userChatData.chatsData[chatIndex].rId === userData.id) {
+              userChatData.chatsData[chatIndex].messageSeen = false;
+            }
+            await updateDoc(userChatsRef, {
+              chatsData: userChatData.chatsData,
+            });
           }
-          await updateDoc(userChatsRef, {
-            chatsData: userChatData.chatsData,
-          });
-        }
+        });
+        setInput("");
+
       }
     } catch (error) {
-      console.error('Error sending message:', error);
-      toast.error('Error sending message.');
+      toast.error(error.message);
     }
   };
-  
-  
-  
-  useEffect(() => {
 
+  useEffect(() => {
     if (messagesId) {
       const unSub = onSnapshot(doc(db, "messages", messagesId), (res) => {
         setMessages(res.data().messages.reverse());
@@ -163,7 +134,7 @@ const ChatBox = () => {
           <img src={gallery_icon} alt="" />
         </label>
         <img onClick={sendMessage} src={send_button} alt="" />
-        </div>
+      </div>
     </div>
   ) : (
     <div className="chat-welcome">
