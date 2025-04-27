@@ -34,28 +34,28 @@ const ChatBox = () => {
           }),
         });
 
-        const userIDs = [chatUser.rId, userData.id];
+          const userIDs = [chatUser.rId, userData.id];
 
-        userIDs.forEach(async (id) => {
-          const userChatsRef = doc(db, "chats", id);
-          const userChatsSnapShot = await getDoc(userChatsRef);
+          userIDs.forEach(async (id) => {
+            const userChatsRef = doc(db, "chats", id);
+            const userChatsSnapShot = await getDoc(userChatsRef);
 
-          if (userChatsSnapShot.exists()) {
-            const userChatData = userChatsSnapShot.data();
-            const chatIndex = userChatData.chatsData.findIndex(
-              (c) => c.messageId === messagesId
-            );
-            userChatData.chatsData[chatIndex].lastMessage = input.slice(0, 30);
-            userChatData.chatsData[chatIndex].updatedAt = Date.now();
+            if (userChatsSnapShot.exists()) {
+              const userChatData = userChatsSnapShot.data();
+              const chatIndex = userChatData.chatsData.findIndex(
+                (c) => c.messageId === messagesId
+              );
+              userChatData.chatsData[chatIndex].lastMessage = input.slice(0, 30);
+              userChatData.chatsData[chatIndex].updatedAt = Date.now();
 
-            if (userChatData.chatsData[chatIndex].rId === userData.id) {
-              userChatData.chatsData[chatIndex].messageSeen = false;
+              if (userChatData.chatsData[chatIndex].rId === userData.id) {
+                userChatData.chatsData[chatIndex].messageSeen = false;
+              }
+              await updateDoc(userChatsRef, {
+                chatsData: userChatData.chatsData,
+              });
             }
-            await updateDoc(userChatsRef, {
-              chatsData: userChatData.chatsData,
-            });
-          }
-        });
+          });
         setInput("");
       }
     } catch (error) {
@@ -109,7 +109,6 @@ const ChatBox = () => {
       <div className="chat-message">
         {messages.map((msg, index) => {
           return (
-            // Explicitly return the JSX for each message
             <div
               key={index}
               className={msg.sId === userData.id ? "sender-msg" : "recieve-msg"}
