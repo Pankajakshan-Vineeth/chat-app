@@ -19,12 +19,10 @@ const ChatBox = () => {
 
   console.log("chatUser", chatUser);
 
-  //state variable to store the data of the message input field
-
+  // State variable to store the data of the message input field
   const [input, setInput] = useState("");
 
-  //send message function
-
+  // Send message function
   const sendMessage = async () => {
     try {
       if (input && messagesId) {
@@ -59,10 +57,29 @@ const ChatBox = () => {
           }
         });
         setInput("");
-
       }
     } catch (error) {
       toast.error(error.message);
+    }
+  };
+
+  //  timestamp to 12-hour format (AM/PM)
+  const convertTimestamp = (timestamp) => {
+
+    if (!timestamp) return "Invalid Time";  // Handle case when timestamp is undefined
+
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp); 
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    // minutes to ensure it's always two digits
+    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+
+    // Check if it's AM or PM and adjust hours accordingly
+    if (hours >= 12) {
+      return (hours === 12 ? hours : hours - 12) + ':' + formattedMinutes + ' PM';
+    } else {
+      return (hours === 0 ? 12 : hours) + ':' + formattedMinutes + ' AM';
     }
   };
 
@@ -70,7 +87,6 @@ const ChatBox = () => {
     if (messagesId) {
       const unSub = onSnapshot(doc(db, "messages", messagesId), (res) => {
         setMessages(res.data().messages.reverse());
-        console.log(res.data().messages.reverse());
       });
       return () => {
         unSub();
@@ -91,33 +107,24 @@ const ChatBox = () => {
       </div>
 
       <div className="chat-message">
-        <div className="sender-msg">
-          <p className="msg">
-            Lorel ipsum is placeholder text commonly used in ..
-          </p>
-          <div>
-            <img src={profile_img} alt="" />
-            <p>2:30PM</p>
-          </div>
-        </div>
-
-        <div className="sender-msg">
-          <img className="msg-img" src={pic1} alt="" />
-          <div>
-            <img src={profile_img} alt="" />
-            <p>2:30PM</p>
-          </div>
-        </div>
-
-        <div className="recieve-msg">
-          <p className="msg">
-            Lorel ipsum is placeholder text commonly used in ..
-          </p>
-          <div>
-            <img src={profile_img} alt="" />
-            <p>2:30PM</p>
-          </div>
-        </div>
+        {messages.map((msg, index) => {
+          return (
+            // Explicitly return the JSX for each message
+            <div
+              key={index}
+              className={msg.sId === userData.id ? "sender-msg" : "recieve-msg"}
+            >
+              <p className="msg">{msg.text}</p>
+              <div>
+                <img
+                  src={msg.sId === userData.id ? userData.avatar : chatUser.avatar}
+                  alt=""
+                />
+                <p>{convertTimestamp(msg.createdAt)}</p>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <div className="chat-input">
