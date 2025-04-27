@@ -95,7 +95,7 @@ const resetPass = async (email) => {
       toast.success('A password reset email has been sent');
     } else {
       // If the email does not exist in the database
-      toast.error('The email does not exist in our records');
+      toast.error('The email does not exists');
     }
   } catch (error) {
     // error handling

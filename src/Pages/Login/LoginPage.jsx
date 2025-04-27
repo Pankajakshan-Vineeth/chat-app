@@ -13,6 +13,7 @@ const LoginPage = () => {
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     setLoading(true); // Disable buttons during loading
+    
     if (currState === 'Sign Up') {
       await signup(userName, email, password);
     } else {

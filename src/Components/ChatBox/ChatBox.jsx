@@ -95,7 +95,7 @@ const ChatBox = () => {
   }, [messagesId]);
 
   return chatUser ? (
-    <div className="chat-box">
+    <div className={"chat-box"}>
       <div className="chat-user">
         <img src={chatUser?.avatar || profile_img} alt="" />
         <p>

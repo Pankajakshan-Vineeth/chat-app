@@ -128,3 +128,9 @@
 .menu:hover .sub-menu {
     display: block;
 }
+
+@media (max-width: 900px){
+    .ls{
+       width:100%
+    }
+}
